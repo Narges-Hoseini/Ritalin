@@ -1,4 +1,5 @@
 import arcade
+import random
 
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 550
@@ -7,6 +8,20 @@ SCREEN_TITLE = "chicken invaders"
 CHARACTER_SCALING = 0.25
 
 PLAYER_MOVEMENT_SPEED = 5
+
+"""class Chicken(arcade.Sprite):
+    def on_update(self, delta_time: float = 1/60):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+        if self.left < 0 :
+            self.change_x *= -1
+        if self.right > SCREEN_WIDTH:
+            self.change_x *= -1
+        if self.bottom < 0:
+            self.change_y *= -1
+        if self.top > SCREEN_HEIGHT:
+            self.change_y *= -1"""
+
 
 
 class MyGame(arcade.Window):
@@ -22,6 +37,8 @@ class MyGame(arcade.Window):
         self.physics_engine = None
         
         arcade.set_background_color(arcade.csscolor.BLANCHED_ALMOND)
+        
+        self.set_mouse_visible(False)
 
     def setup(self):
         
@@ -38,14 +55,30 @@ class MyGame(arcade.Window):
         
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player_sprite, self.scene.get_sprite_list("Walls")
-        ) 
+        )
+        self.chicken_list = arcade.SpriteList()
+        """for i in range(15):
+            self.chiken_sprite = arcade.Sprite("chicken-removebg-preview.png")
+            self.chicken = Chicken() 
+            self.chicken.center_x = random.randrange(SCREEN_WIDTH)
+            self.chicken.center_y = random.randrange(SCREEN_HEIGHT)
+            self.chicken.change_x = random.randrange(-1,3)
+            self.chicken.change_y = random.randrange(-1,3)
+            self.chicken_list.append(self.chicken)"""
+        for i in range(15):
+            self.chicken_sprite = arcade.Sprite("G://AP//ap 2023//chicken-removebg-preview (1).png", 0.1)
+            self.chicken_sprite.center_x = random.randrange(20, SCREEN_WIDTH - 20)
+            self.chicken_sprite.center_y = random.randrange(220, SCREEN_HEIGHT - 20)
+            self.chicken_list.append(self.chicken_sprite) 
 
     
     def on_draw(self):
-       
+        arcade.start_render()
         self.clear()
          
         self.scene.draw()
+        
+        self.chicken_list.draw()
         
     def on_key_press(self, key, modifiers):
        
