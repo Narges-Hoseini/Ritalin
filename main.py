@@ -4,16 +4,13 @@ import entity
 import configs
 
 
-
-
-
 class MyGame(arcade.Window):
 
     def __init__(self):
 
         super().__init__(configs.SCREEN_WIDTH, configs.SCREEN_HEIGHT, configs.SCREEN_TITLE)
 
-        self.scene = None
+        self.scene: arcade.Scene = None
 
         self.player_sprite = None
 
@@ -28,25 +25,28 @@ class MyGame(arcade.Window):
         self.scene = arcade.Scene()
 
         self.scene.add_sprite_list("Player")
-        self.scene.add_sprite_list("Walls", use_spatial_hash=True)
 
         self.player_sprite = arcade.Sprite(configs.JET_ASSET_PATH, configs.JET_CHARACTER_SCALING)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.scene.add_sprite("Player", self.player_sprite)
 
-        self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player_sprite, self.scene.get_sprite_list("Walls")
-        )
-        self.chicken_list = arcade.SpriteList()
+        self.scene.add_sprite_list("Chickens")
 
         for i in range(15):
-            self.chicken = entity.Chicken(configs.CHICKEN_ASSET_PATH, 0.1)
-            self.chicken.center_x = random.randrange(20, configs.SCREEN_WIDTH - 20)
-            self.chicken.center_y = random.randrange(220, configs.SCREEN_HEIGHT - 20)
-            self.chicken.change_x = random.randrange(-1, 3)
-            self.chicken.change_y = random.randrange(-1, 3)
-            self.chicken_list.append(self.chicken)
+            chicken = entity.Chicken(configs.CHICKEN_ASSET_PATH, 0.1)
+            chicken.center_x = random.randrange(20, configs.SCREEN_WIDTH - 20)
+            chicken.center_y = random.randrange(220, configs.SCREEN_HEIGHT - 20)
+
+
+            chicken.change_x = random.uniform(-1, 3)
+            chicken.change_y = random.uniform(-1, 3)
+
+            self.scene.add_sprite("Chickens", chicken)
+
+        self.physics_engine = arcade.PhysicsEngineSimple(
+            self.player_sprite, self.scene.get_sprite_list("Chickens")
+        )
 
     def on_draw(self):
 
@@ -54,12 +54,29 @@ class MyGame(arcade.Window):
 
         self.scene.draw()
 
-        self.chicken_list.draw()
+    def on_key_press(self, key, modifiers):
 
-    def on_mouse_motion(self, x, y, dx, dy):
-        """
-        Called whenever the mouse moves.
-        """
+        if key == arcade.key.UP or key == arcade.key.W:
+            self.player_sprite.change_y = configs.PLAYER_MOVEMENT_SPEED
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = -configs.PLAYER_MOVEMENT_SPEED
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = -configs.PLAYER_MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = configs.PLAYER_MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.UP or key == arcade.key.W:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.DOWN or key == arcade.key.S:
+            self.player_sprite.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = 0
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = 0
+
+    """def on_mouse_motion(self, x, y, dx, dy):
+
         if x > configs.SCREEN_WIDTH:
             self.player_sprite.center_x = configs.SCREEN_WIDTH
         elif x < 0:
@@ -72,12 +89,12 @@ class MyGame(arcade.Window):
         elif y < 0:
             self.player_sprite.center_y = 0
         else:
-            self.player_sprite.center_y = y
+            self.player_sprite.center_y = y"""
 
     def on_update(self, delta_time: float):
 
+        self.scene.on_update(delta_time)
         self.physics_engine.update()
-        self.chicken_list.on_update()
 
         return super().on_update(delta_time)
 
