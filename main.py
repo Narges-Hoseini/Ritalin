@@ -30,7 +30,7 @@ class MyGame(arcade.Window):
         self.scene.add_sprite_list("Player")
         self.scene.add_sprite_list("Walls", use_spatial_hash=True)
 
-        self.player_sprite = arcade.Sprite("./assets/jet.png", configs.JET_CHARACTER_SCALING)
+        self.player_sprite = arcade.Sprite(configs.JET_ASSET_PATH, configs.JET_CHARACTER_SCALING)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.scene.add_sprite("Player", self.player_sprite)
@@ -41,7 +41,7 @@ class MyGame(arcade.Window):
         self.chicken_list = arcade.SpriteList()
 
         for i in range(15):
-            self.chicken = entity.Chicken("./assets/chicken.png", 0.1)
+            self.chicken = entity.Chicken(configs.CHICKEN_ASSET_PATH, 0.1)
             self.chicken.center_x = random.randrange(20, configs.SCREEN_WIDTH - 20)
             self.chicken.center_y = random.randrange(220, configs.SCREEN_HEIGHT - 20)
             self.chicken.change_x = random.randrange(-1, 3)
