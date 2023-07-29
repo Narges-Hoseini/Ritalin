@@ -1,0 +1,9 @@
+SCREEN_WIDTH = 650
+SCREEN_HEIGHT = 550
+SCREEN_TITLE = "chicken invaders"
+
+JET_CHARACTER_SCALING = 0.1
+
+PLAYER_MOVEMENT_SPEED = 5
+JET_ASSET_PATH = "./assets/jet.png"
+CHICKEN_ASSET_PATH = "./assets/chicken.png"
