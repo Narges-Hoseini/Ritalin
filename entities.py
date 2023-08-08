@@ -140,9 +140,9 @@ class Jet(arcade.Sprite):
         else:
             if (self.change_x != 0 or self.change_y != 0) and self.last_key_press_time:
                 if time.time() - self.last_key_press_time >= 0.3:
-                    self.current_frame = self.frames[1]
-                else:
                     self.current_frame = self.frames[2]
+                else:
+                    self.current_frame = self.frames[1]
             else:
                 self.current_frame = self.frames[0]
 
@@ -170,15 +170,16 @@ class Jet(arcade.Sprite):
 
             for collision in hit_list:
                 self.hp -= collision.damage
-            collision.remove_from_sprite_lists()
+                collision.remove_from_sprite_lists()
             if self.hp <= 0:
                 self.is_dead = True
                 self.change_x = 0
                 self.change_y = 0
                 return
+
         hit_list: List[Chicken] = arcade.check_for_collision_with_list(self,
                                                                        self.scene[
-                                                                           configs.CHICKEN_LIST_NAME])  # refactor type to Egg list
+                                                                           configs.CHICKEN_LIST_NAME])  # refactor type to Chivken list
 
         if hit_list:
             # self.remove_from_sprite_lists()
@@ -186,7 +187,7 @@ class Jet(arcade.Sprite):
             for collision in hit_list:
                 self.hp -= collision.damage
                 collision.hp -= self.damage
-            collision.remove_from_sprite_lists()
+                collision.remove_from_sprite_lists() # todo: fix not die
             if self.hp <= 0:
                 self.is_dead = True
                 self.change_x = 0
@@ -209,14 +210,14 @@ class Chicken(arcade.Sprite):
 
         hit_list: List[Bullet] = arcade.check_for_collision_with_list(self,
                                                                       self.scene[
-                                                                          configs.BULLET_LIST_NAME])  # refactor type to Egg list
+                                                                          configs.BULLET_LIST_NAME])  # refactor type to Buller list
 
         if hit_list:
             # self.remove_from_sprite_lists()
 
             for collision in hit_list:
                 self.hp -= collision.damage
-            collision.remove_from_sprite_lists()
+                collision.remove_from_sprite_lists()
             if self.hp <= 0:
                 self.remove_from_sprite_lists()
                 return
@@ -242,12 +243,11 @@ class Chicken(arcade.Sprite):
             self.change_y *= -1
         if self.bottom < 0:
             self.change_y *= -1
-
         if self.center_y < configs.CHICKEN_MINIMUM_HEIGHT_LIMIT:
             self.change_y *= -1
 
-        return super().on_update(delta_time)
-
+        super().on_update(delta_time)
+        return
 
 class Bullet(arcade.Sprite):
     def __init__(self, damage: float, asset_path: str, character_scaling: float):
@@ -263,7 +263,6 @@ class Bullet(arcade.Sprite):
 
 class Egg(Bullet):
     def __init__(self):
-        self.damage: float = configs.EGG_DAMAGE
         super().__init__(configs.EGG_DAMAGE, configs.EGG_ASSET_PATH, configs.EGG_SCALE)
 
     def on_update(self, delta_time: float = 1 / configs.FPS):
@@ -271,8 +270,8 @@ class Egg(Bullet):
         self.center_y += self.change_y
         self.change_x = 0
         self.change_y = -configs.EGG_SPEED
-        return super().on_update(delta_time)
-
+        super().on_update(delta_time)
+        return
 
 class LaserBullet(Bullet):
     def __init__(self):
@@ -284,8 +283,8 @@ class LaserBullet(Bullet):
         self.center_y += self.change_y
         self.change_x = configs.LASER_SPEED * math.cos(math.radians(self.angle))
         self.change_y = configs.LASER_SPEED * math.sin(math.radians(self.angle))
-        return super().on_update(delta_time)
-
+        super().on_update(delta_time)
+        return
 
 def create_jet() -> Jet:
     jet: Jet = Jet()  # create new arcade.sprite object
@@ -302,8 +301,8 @@ def create_jet() -> Jet:
 
 def create_random_chicken(scene: arcade.Scene) -> Chicken:
     chicken = Chicken(scene)
-    chicken.center_x = random.randrange(*configs.CHICKEN_START_WIDTH_RANGE)
-    chicken.center_y = random.randrange(*configs.CHICKEN_START_HEIGHT_RANGE)
+    chicken.center_x = random.uniform(*configs.CHICKEN_START_WIDTH_RANGE)
+    chicken.center_y = random.uniform(*configs.CHICKEN_START_HEIGHT_RANGE)
 
     chicken.change_x = random.uniform(*configs.CHICKEN_SPEED_RANGE)
     chicken.change_y = random.uniform(*configs.CHICKEN_SPEED_RANGE)

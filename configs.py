@@ -53,3 +53,6 @@ CHICKEN_COOLDOWN = 10
 CHICKEN_DAMAGE = 200
 
 WALL_LIST_NAME = "Walls"
+
+if __name__ == '__main__':
+    print("This is just a config file.")

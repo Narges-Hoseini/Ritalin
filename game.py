@@ -88,7 +88,7 @@ class ChickenInvaders(arcade.Window):
             self.player_sprite.check_collision()
             self.scene.on_update(delta_time)
             self.physics_engine.update()
-            self.scene.update_animation(
-                delta_time)
+            self.scene.update_animation(delta_time)
 
-            return super().on_update(delta_time)
+            super().on_update(delta_time)
+            return
