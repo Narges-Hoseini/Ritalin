@@ -187,7 +187,8 @@ class Jet(arcade.Sprite):
             for collision in hit_list:
                 self.hp -= collision.damage
                 collision.hp -= self.damage
-                collision.remove_from_sprite_lists() # todo: fix not die
+                if collision.hp <= 0:
+                    collision.remove_from_sprite_lists()
             if self.hp <= 0:
                 self.is_dead = True
                 self.change_x = 0
