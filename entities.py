@@ -30,6 +30,7 @@ class Jet(arcade.Sprite):
         self.explode_height: float = None
         self.hp: float = configs.JET_HP
         self.game_over: bool = False
+        self.last_chicken_damage_time: float = 0
 
     def set_size(self, sprite_width: float = configs.JET_SPRITE_WIDTH,
                  sprite_height: float = configs.JET_SPRITE_HEIGHT):
@@ -177,18 +178,23 @@ class Jet(arcade.Sprite):
                 self.change_y = 0
                 return
 
+        if time.time() - self.last_chicken_damage_time < configs.CHICKEN_DAMAGE_COOLDOWN:
+            return
+
         hit_list: List[Chicken] = arcade.check_for_collision_with_list(self,
                                                                        self.scene[
                                                                            configs.CHICKEN_LIST_NAME])  # refactor type to Chivken list
 
         if hit_list:
             # self.remove_from_sprite_lists()
-
             for collision in hit_list:
                 self.hp -= collision.damage
                 collision.hp -= self.damage
                 if collision.hp <= 0:
                     collision.remove_from_sprite_lists()
+
+                self.last_chicken_damage_time = time.time()
+
             if self.hp <= 0:
                 self.is_dead = True
                 self.change_x = 0
